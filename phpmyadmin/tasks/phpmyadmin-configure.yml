@@ -1,0 +1,50 @@
+- name: Add default username and password for MySQL connection.
+  lineinfile: >
+    dest={{ phpmyadmin_config_file }}
+    state=present
+    regexp="^.+\['{{ item.key }}'\].+$"
+    line="$cfg['Servers'][$i]['{{ item.key }}'] = '{{ item.value }}';"
+    insertbefore="^\?>"
+    mode=0644
+  with_items:
+    - key: host
+      value: "{{ phpmyadmin_mysql_host }}"
+    - key: port
+      value: "{{ phpmyadmin_mysql_port }}"
+    - key: socket
+      value: "{{ phpmyadmin_mysql_socket }}"
+    - key: connect_type
+      value: "{{ phpmyadmin_mysql_connect_type }}"
+    - key: user
+      value: "{{ phpmyadmin_mysql_user }}"
+    - key: password
+      value: "{{ phpmyadmin_mysql_password }}"
+  notify: restart apache
+
+#- name: Fix phpmyadmin - open_basedir - get current value
+#  command:
+#    cmd: "grep -e 'php_admin_value open_basedir .*:/tmp/' /etc/phpmyadmin/apache.conf"
+#  register: isPhpMyAdminFixed
+#  ignore_errors: true
+
+#- name: Fix phpmyadmin - open_basedir - fix
+#  lineinfile:
+#    path: "/etc/phpmyadmin/apache.conf"
+#    state: present
+#    regexp: 'php_admin_value open_basedir (.*)'
+#    line: '\tphp_admin_value open_basedir \1:/tmp/'
+#    backrefs: yes
+#  when: isPhpMyAdminFixed.failed
+#  notify: restart apache
+
+- name: Template phpmyadmin apache.conf
+  ansible.builtin.template:
+    src: phpmyadmin-apache.j2
+    dest: /etc/phpmyadmin/apache.conf
+  notify: restart apache
+
+#- name: Set the alias to dbmaintenance
+#  ansible.builtin.lineinfile:
+#    path: /etc/phpmyadmin/apache.conf
+#    regexp: '^Alias'
+#    line: Alias /dbmaintenance /usr/share/phpmyadmin

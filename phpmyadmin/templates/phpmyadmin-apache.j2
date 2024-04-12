@@ -1,0 +1,20 @@
+# Ansible Managed
+
+Alias /dbmaintenance /usr/share/phpmyadmin
+
+ProxyPassMatch ^/dbmaintenance/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/usr/share/phpmyadmin/$1"
+ProxyPassMatch ^/dbmaintenance/(.*\.php(/.*)?)$ "fcgi://127.0.0.1:9000/usr/share/phpmyadmin/$1index.php"
+
+<Directory /usr/share/phpmyadmin>
+    Options SymLinksIfOwnerMatch
+    DirectoryIndex index.php
+
+</Directory>
+
+# Disallow web access to directories that don't need it
+<Directory /usr/share/phpmyadmin/templates>
+    Require all denied
+</Directory>
+<Directory /usr/share/phpmyadmin/libraries>
+    Require all denied
+</Directory>
