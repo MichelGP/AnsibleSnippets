@@ -1,0 +1,63 @@
+---
+  - name: Stop Minecraft service
+    systemd:
+      name: minecraft
+      state: stopped
+    when: ansible_facts.services["minecraft.service"] is defined
+
+  - name: Install required packages
+    # Should be agnostic to package manager (apt, yum) however package names may differ based on distribution
+    # Tmux required to create and access Minecraft admin console.
+    # ACL package required to avoid this error:  "Failed to set permissions on the temporary files Ansible needs to create when becoming an unprivileged user"
+    # https://github.com/georchestra/ansible/issues/55#issuecomment-588313638
+    package:
+      name:
+      - tmux
+      - vim
+      - acl
+      - wget
+      - curl
+      - unzip
+      - tar
+      - htop
+      - smbclient
+      - cifs-utils
+      state: latest
+
+  - name: Install OpenJDK
+    apt:
+      name: openjdk-17-jre-headless
+      state: latest
+
+  - name: Create group "minecraft"
+    ansible.builtin.group:
+      name: minecraft
+      state: present
+
+  # Expected to have an wheel group with proper permissions (passwordless sudo of example)
+  - name: Add user "minecraft"
+    user:
+      name: minecraft
+      groups: minecraft, wheel
+      shell: /sbin/bash
+      create_home: yes
+      home: /home/minecraft
+      append: yes
+      comment: "System user for minecraft"
+      state: present
+
+  - name: Create a directory if it does not exist
+    ansible.builtin.file:
+      path: /opt/minecraft
+      state: directory
+      mode: '0755'
+      owner: minecraft
+      group: minecraft
+
+  - name: Download server.jar
+    get_url:
+      url: "{{ minecraft_server_jar_url }}"
+      dest: /opt/minecraft/server.jar
+      mode: '0700'
+      owner: minecraft
+      group: minecraft
