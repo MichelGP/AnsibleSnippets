@@ -1,0 +1,26 @@
+  - name: Ensure UFW is installed
+    apt:
+      name: ufw
+      state: present
+
+  - name: Allow HTTP/HTTPS ports
+    ufw:
+      rule: allow
+      port: "{{ item.port }}"
+      proto: "{{ item.proto }}"
+    loop:
+      - { port: "{{ minecraft_server_port }}", proto: tcp }
+
+  - name: Enable UFW
+    ufw:
+      state: enabled
+
+  - name: Reload UFW
+    ufw:
+      state: reloaded
+
+  - name: Ensure UFW is started at boot
+    service:
+      name: ufw
+      enabled: yes
+      state: started
