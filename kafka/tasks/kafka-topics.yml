@@ -1,0 +1,16 @@
+---
+  - name: Create Kafka topic - home-metrics
+    ansible.builtin.command: /opt/kafka/bin/kafka-topics.sh --create --topic home-metrics --bootstrap-server localhost:9092
+    ignore_errors: true
+
+  - name: Create Kafka topic - iot-metrics
+    ansible.builtin.command: /opt/kafka/bin/kafka-topics.sh --create --topic iot-metrics --bootstrap-server localhost:9092
+    ignore_errors: true
+
+  - name: Create Kafka topic - itho-metrics
+    ansible.builtin.command: /opt/kafka/bin/kafka-topics.sh --create --topic itho-metrics --bootstrap-server localhost:9092
+    ignore_errors: true
+
+  - name: Create Kafka topic - tado-metrics
+    ansible.builtin.command: /opt/kafka/bin/kafka-topics.sh --create --topic tado-metrics --bootstrap-server localhost:9092
+    ignore_errors: true

@@ -1,0 +1,28 @@
+---
+  - name: Install required packages
+    package:
+      name:
+      - tar
+      - kafkacat
+      state: latest
+
+  - name: Install OpenJDK
+    apt:
+      name: openjdk-17-jre-headless
+      state: latest
+
+  - name: Download Apache Kafka
+    get_url:
+      url: "{{ apache_kafka_download_url }}"
+      dest: /tmp/kafka.tgz
+
+  - name: Create /opt/kafka directory
+    ansible.builtin.file:
+      path: /opt/kafka
+      state: directory
+
+  - name: Extract Apache Kafka tar-file
+    shell: tar xzf /tmp/kafka.tgz -C /opt/kafka --strip-components=1
+
+
+

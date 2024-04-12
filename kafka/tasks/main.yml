@@ -1,0 +1,4 @@
+- import_tasks: kafka-install.yml
+- import_tasks: kafka-configure.yml
+- import_tasks: kafka-firewall.yml
+- import_tasks: kafka-topics.yml

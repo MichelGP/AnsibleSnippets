@@ -1,0 +1,29 @@
+---
+  - name: Ensure UFW is installed
+    apt:
+      name: ufw
+      state: present
+
+  - name: Allow Kafka ports
+    ufw:
+      rule: allow
+      port: "{{ item.port }}"
+      proto: "{{ item.proto }}"
+    loop:
+      - { port: 9092, proto: tcp } # Kafka Client - Internal
+      - { port: 9093, proto: tcp } # Kafka Control Plane
+      - { port: 9095, proto: tcp } # Kafka Client - External
+
+  - name: Enable UFW
+    ufw:
+      state: enabled
+
+  - name: Reload UFW
+    ufw:
+      state: reloaded
+
+  - name: Ensure UFW is started at boot
+    service:
+      name: ufw
+      enabled: yes
+      state: started
