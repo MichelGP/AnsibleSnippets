@@ -1,0 +1,19 @@
+- name: Install grafana plugins
+  shell: grafana-cli plugins install "{{ item.plugin }}"
+  loop:
+    - { plugin: alexanderzobnin-zabbix-app }
+    - { plugin: grafana-worldmap-panel }
+    - { plugin: hamedkarbasi93-kafka-datasource }
+    - { plugin: grafana-strava-datasource }
+
+- name: Upgrade grafana plugins
+  shell: grafana-cli plugins upgrade-all
+
+- name: Update grafana plugins
+  shell: grafana-cli plugins update-all
+
+- name: Restart Grafana-Server service
+  service:
+    name: grafana-server
+    state: restarted
+    enabled: yes

@@ -1,0 +1,4 @@
+- import_tasks: grafana-install.yml
+- import_tasks: grafana-configure.yml
+- import_tasks: grafana-firewall.yml
+- import_tasks: grafana-plugins.yml
