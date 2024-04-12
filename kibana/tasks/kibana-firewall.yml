@@ -1,0 +1,30 @@
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+
+- name: Allow Kibana web interface (port 5601)
+  ufw:
+    rule: allow
+    port: 5601
+    proto: tcp
+
+- name: Allow Fleet (port 8220)
+  ufw:
+    rule: allow
+    port: 8220
+    proto: tcp
+
+- name: Enable UFW
+  ufw:
+    state: enabled
+
+- name: Reload UFW
+  ufw:
+    state: reloaded
+
+- name: Ensure UFW is started at boot
+  service:
+    name: ufw
+    enabled: yes
+    state: started
