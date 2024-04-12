@@ -1,0 +1,7 @@
+- name: Get CA certificate
+  shell: cat /etc/elasticsearch/certs/http_ca.crt
+  register: ca_cert
+
+- name: CA certficate file contents from response
+  set_fact:
+    ca_cert: "{{ ca_cert.stdout }}"
