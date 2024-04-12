@@ -1,4 +1,0 @@
-- include_tasks: elasticsearch-install.yml
-- import_tasks: elasticsearch-configure.yml
-- import_tasks: elasticsearch-firewall.yml
-- import_tasks: elasticsearch-getCAcert.yml
