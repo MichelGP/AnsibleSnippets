@@ -1,0 +1,10 @@
+---
+- name: Install Slapd
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: present
+    update_cache: yes
+  with_items:
+    - slapd
+    - ldap-utils
+    - ldap-account-manager
